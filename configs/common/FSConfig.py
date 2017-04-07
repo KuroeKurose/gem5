@@ -127,8 +127,8 @@ def makeLinuxAlphaSystem(mem_mode, mdesc=None, ruby=False, cmdline=None):
     self.intrctrl = IntrControl()
     self.mem_mode = mem_mode
     self.terminal = Terminal()
-    self.kernel = binary('vmlinux')
-    self.pal = binary('ts_osfpal')
+    self.kernel = binary('vmlinux_2.6.27-gcc_4.3.4')
+    self.pal = binary('tsb_osfpal')
     self.console = binary('console')
     if not cmdline:
         cmdline = 'root=/dev/hda1 console=ttyS0'
