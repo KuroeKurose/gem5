@@ -62,6 +62,7 @@ from common import CpuConfig
 from common import MemConfig
 from common.Caches import *
 from common.cpu2000 import *
+from common.cpu2006 import *
 
 # Check if KVM support has been enabled, we might need to do VM
 # configuration if that's the case.
@@ -144,21 +145,106 @@ if options.bench:
         sys.exit(1)
 
     for app in apps:
-        try:
-            if buildEnv['TARGET_ISA'] == 'alpha':
-                exec("workload = %s('alpha', 'tru64', '%s')" % (
-                        app, options.spec_input))
-            elif buildEnv['TARGET_ISA'] == 'arm':
-                exec("workload = %s('arm_%s', 'linux', '%s')" % (
-                        app, options.arm_iset, options.spec_input))
-            else:
-                exec("workload = %s(buildEnv['TARGET_ISA', 'linux', '%s')" % (
-                        app, options.spec_input))
-            multiprocesses.append(workload.makeProcess())
-        except:
-            print >>sys.stderr, "Unable to find workload for %s: %s" % (
-                    buildEnv['TARGET_ISA'], app)
-            sys.exit(1)
+        if app == '400.perlbench':
+            process = perlbench()
+            multiprocesses.append(process)
+        elif app == '401.bzip2':
+            process = bzip2()
+            multiprocesses.append(process)
+        elif app == '403.gcc':
+            process = gcc()
+            multiprocesses.append(process)
+        elif app == '410.bwaves':
+            process = bwaves()
+            multiprocesses.append(process)
+        elif app == '416.gamess':
+            process = gamess()
+            multiprocesses.append(process)
+        elif app == '429.mcf':
+            process = mcf()
+            multiprocesses.append(process)
+        elif app == '433.milc':
+            process = milc()
+            multiprocesses.append(process)
+        elif app == '434.zeusmp':
+            process = zeusmp()
+            multiprocesses.append(process)
+        elif app == '435.gromacs':
+            process = gromacs()
+            multiprocesses.append(process)
+        elif app == '436.cactusADM':
+            process = cactusADM()
+            multiprocesses.append(process)
+        elif app == '437.leslie3d':
+            process = leslie3d()
+            multiprocesses.append(process)
+        elif app == '444.namd':
+            process = namd()
+            multiprocesses.append(process)
+        elif app == '445.gobmk':
+            process = gobmk()
+            multiprocesses.append(process)
+        elif app == '450.soplex':
+            process = soplex()
+            multiprocesses.append(process)
+        elif app == '453.povray':
+            process = povray()
+            multiprocesses.append(process)
+        elif app == '454.calculix':
+            process = calculix()
+            multiprocesses.append(process)
+        elif app == '456.hmmer':
+            process = hmmer()
+            multiprocesses.append(process)
+        elif app == '458.sjeng':
+            process = sjeng()
+            multiprocesses.append(process)
+        elif app == '459.GemsFDTD':
+            process = GemsFDTD()
+            multiprocesses.append(process)
+        elif app == '462.libquantum':
+            process = libquantum()
+            multiprocesses.append(process)
+        elif app == '464.h264ref':
+            process = h264ref()
+            multiprocesses.append(process)
+        elif app == '470.lbm':
+            process = lbm()
+            multiprocesses.append(process)
+        elif app == '471.omnetpp':
+            process = omnetpp()
+            multiprocesses.append(process)
+        elif app == '473.astar':
+            process = astar()
+            multiprocesses.append(process)
+        elif app == '481.wrf':
+            process = wrf()
+            multiprocesses.append(process)
+        elif app == '482.sphinx3':
+            process = sphinx3()
+            multiprocesses.append(process)
+        elif app == '998.specrand':
+            process = specrand_i()
+            multiprocesses.append(process)
+        elif app == '999.specrand':
+            process = specrand_f()
+            multiprocesses.append(process)
+        else:
+            try:
+                if buildEnv['TARGET_ISA'] == 'alpha':
+                    exec("workload = %s('alpha', 'tru64', '%s')" % (
+                            app, options.spec_input))
+                elif buildEnv['TARGET_ISA'] == 'arm':
+                    exec("workload = %s('arm_%s', 'linux', '%s')" % (
+                            app, options.arm_iset, options.spec_input))
+                else:
+                    exec("workload = %s(buildEnv['TARGET_ISA', 'linux', '%s')" % (
+                            app, options.spec_input))
+                multiprocesses.append(workload.makeProcess())
+            except:
+                print >>sys.stderr, "Unable to find workload for %s: %s" % (
+                        buildEnv['TARGET_ISA'], app)
+                sys.exit(1)
 elif options.cmd:
     multiprocesses, numThreads = get_processes(options)
 else:
