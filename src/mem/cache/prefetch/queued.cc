@@ -114,6 +114,7 @@ QueuedPrefetcher::notify(const PacketPtr &pkt)
 PacketPtr
 QueuedPrefetcher::getPacket()
 {
+	//TODO
     DPRINTF(HWPrefetch, "Requesting a prefetch to issue.\n");
 
     if (pfq.empty()) {
