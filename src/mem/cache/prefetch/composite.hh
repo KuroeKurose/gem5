@@ -46,26 +46,27 @@
  * Miss and writeback queue declarations.
  */
 
-#ifndef __MEM_CACHE_PREFETCH_BASE_HH__
-#define __MEM_CACHE_PREFETCH_BASE_HH__
+#ifndef __MEM_CACHE_PREFETCH_COMPOSITE_HH__
+#define __MEM_CACHE_PREFETCH_COMPOSITE_HH__
 
 #include "base/statistics.hh"
 #include "mem/packet.hh"
-#include "params/BasePrefetcher.hh"
+#include "params/CompositePrefetcher.hh"
 #include "sim/clocked_object.hh"
 
 #include <list>
 
 #include "mem/cache/prefetch/base.hh"
+
 #include "params/QueuedPrefetcher.hh"
+#include "params/StridePrefetcher.hh"
+#include "params/TaggedPrefetcher.hh"
 
 class BaseCache;
 
 class CompositePrefetcher : public BasePrefetcher
 {
   protected:
-
-
 
     // PARAMETERS
 
@@ -128,9 +129,9 @@ class CompositePrefetcher : public BasePrefetcher
 
   public:
 
-    BasePrefetcher(const BasePrefetcherParams *p);
+    CompositePrefetcher(const CompositePrefetcherParams *p);
 
-    virtual ~BasePrefetcher() {}
+    virtual ~CompositePrefetcher() {}
 
     void setCache(BaseCache *_cache);
 
@@ -147,4 +148,4 @@ class CompositePrefetcher : public BasePrefetcher
 
     virtual void regStats();
 };
-#endif //__MEM_CACHE_PREFETCH_BASE_HH__
+#endif //__MEM_CACHE_PREFETCH_COMPOSITE_HH__
