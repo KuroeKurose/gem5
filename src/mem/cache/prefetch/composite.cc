@@ -48,117 +48,34 @@
 
 #include "mem/cache/prefetch/composite.hh"
 
-#include <list>
-
-#include "base/intmath.hh"
+#include "debug/HWPrefetch.hh"
 #include "mem/cache/base.hh"
-#include "sim/system.hh"
 
 CompositePrefetcher::CompositePrefetcher(const CompositePrefetcherParams *p)
-    : ClockedObject(p), cache(nullptr), blkSize(0), lBlkSize(0),
-      system(p->sys), onMiss(p->on_miss), onRead(p->on_read),
-      onWrite(p->on_write), onData(p->on_data), onInst(p->on_inst),
-      masterId(system->getMasterId(name())),
-      pageBytes(system->getPageBytes())
+    : BasePrefetcher(p)
 {
+ // TODO
 }
 
-void
-CompositePrefetcher::setCache(BaseCache *_cache)
+CompositePrefetcher::~CompositePrefetcher()
 {
-    assert(!cache);
-    cache = _cache;
-    blkSize = cache->getBlockSize();
-    lBlkSize = floorLog2(blkSize);
+// TODO
+}
+
+Tick
+CompositePrefetcher::notify(const PacketPtr &pkt)
+{
+    return -1; // TODO
+}
+
+PacketPtr
+CompositePrefetcher::getPacket()
+{
+    return NULL; // TODO
 }
 
 void
 CompositePrefetcher::regStats()
 {
-    ClockedObject::regStats();
-
-    pfIssued
-        .name(name() + ".num_hwpf_issued")
-        .desc("number of hwpf issued")
-        ;
-
-}
-
-bool
-CompositePrefetcher::observeAccess(const PacketPtr &pkt) const
-{
-    Addr addr = pkt->getAddr();
-    bool fetch = pkt->req->isInstFetch();
-    bool read = pkt->isRead();
-    bool inv = pkt->isInvalidate();
-    bool is_secure = pkt->isSecure();
-
-    if (pkt->req->isUncacheable()) return false;
-    if (fetch && !onInst) return false;
-    if (!fetch && !onData) return false;
-    if (!fetch && read && !onRead) return false;
-    if (!fetch && !read && !onWrite) return false;
-    if (!fetch && !read && inv) return false;
-    if (pkt->cmd == MemCmd::CleanEvict) return false;
-
-    if (onMiss) {
-        return !inCache(addr, is_secure) &&
-               !inMissQueue(addr, is_secure);
-    }
-
-    return true;
-}
-
-bool
-CompositePrefetcher::inCache(Addr addr, bool is_secure) const
-{
-    if (cache->inCache(addr, is_secure)) {
-        return true;
-    }
-    return false;
-}
-
-bool
-CompositePrefetcher::inMissQueue(Addr addr, bool is_secure) const
-{
-    if (cache->inMissQueue(addr, is_secure)) {
-        return true;
-    }
-    return false;
-}
-
-bool
-CompositePrefetcher::samePage(Addr a, Addr b) const
-{
-    return roundDown(a, pageBytes) == roundDown(b, pageBytes);
-}
-
-Addr
-CompositePrefetcher::blockAddress(Addr a) const
-{
-    return a & ~(blkSize-1);
-}
-
-Addr
-CompositePrefetcher::blockIndex(Addr a) const
-{
-    return a >> lBlkSize;
-}
-
-Addr
-CompositePrefetcher::pageAddress(Addr a) const
-{
-    return roundDown(a, pageBytes);
-}
-
-Addr
-CompositePrefetcher::pageOffset(Addr a) const
-{
-    return a & (pageBytes - 1);
-}
-
-Addr
-CompositePrefetcher::pageIthBlockAddress(Addr page, uint32_t blockIndex) const
-{
-    return page + (blockIndex << lBlkSize);
+    BasePrefetcher::regStats(); // TODO
 }

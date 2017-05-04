@@ -49,103 +49,21 @@
 #ifndef __MEM_CACHE_PREFETCH_COMPOSITE_HH__
 #define __MEM_CACHE_PREFETCH_COMPOSITE_HH__
 
-#include "base/statistics.hh"
-#include "mem/packet.hh"
-#include "params/CompositePrefetcher.hh"
-#include "sim/clocked_object.hh"
-
 #include <list>
 
 #include "mem/cache/prefetch/base.hh"
-
-#include "params/QueuedPrefetcher.hh"
-#include "params/StridePrefetcher.hh"
-#include "params/TaggedPrefetcher.hh"
-
-class BaseCache;
+#include "params/CompositePrefetcher.hh"
 
 class CompositePrefetcher : public BasePrefetcher
 {
-  protected:
-
-    // PARAMETERS
-
-    /** Pointr to the parent cache. */
-    BaseCache* cache;
-
-    /** The block size of the parent cache. */
-    unsigned blkSize;
-
-    /** log_2(block size of the parent cache). */
-    unsigned lBlkSize;
-
-    /** System we belong to */
-    System* system;
-
-    /** Only consult prefetcher on cache misses? */
-    bool onMiss;
-
-    /** Consult prefetcher on reads? */
-    bool onRead;
-
-    /** Consult prefetcher on reads? */
-    bool onWrite;
-
-    /** Consult prefetcher on data accesses? */
-    bool onData;
-
-    /** Consult prefetcher on instruction accesses? */
-    bool onInst;
-
-    /** Request id for prefetches */
-    MasterID masterId;
-
-    const Addr pageBytes;
-
-    /** Determine if this access should be observed */
-    bool observeAccess(const PacketPtr &pkt) const;
-
-    /** Determine if address is in cache */
-    bool inCache(Addr addr, bool is_secure) const;
-
-    /** Determine if address is in cache miss queue */
-    bool inMissQueue(Addr addr, bool is_secure) const;
-
-    /** Determine if addresses are on the same page */
-    bool samePage(Addr a, Addr b) const;
-    /** Determine the address of the block in which a lays */
-    Addr blockAddress(Addr a) const;
-    /** Determine the address of a at block granularity */
-    Addr blockIndex(Addr a) const;
-    /** Determine the address of the page in which a lays */
-    Addr pageAddress(Addr a) const;
-    /** Determine the page-offset of a  */
-    Addr pageOffset(Addr a) const;
-    /** Build the address of the i-th block inside the page */
-    Addr pageIthBlockAddress(Addr page, uint32_t i) const;
-
-
-    Stats::Scalar pfIssued;
-
   public:
-
     CompositePrefetcher(const CompositePrefetcherParams *p);
+    virtual ~CompositePrefetcher();
 
-    virtual ~CompositePrefetcher() {}
+    Tick notify(const PacketPtr &pkt);
 
-    void setCache(BaseCache *_cache);
+    PacketPtr getPacket();
 
-    /**
-     * Notify prefetcher of cache access (may be any access or just
-     * misses, depending on cache parameters.)
-     * @retval Time of next prefetch availability, or MaxTick if none.
-     */
-    virtual Tick notify(const PacketPtr &pkt) = 0;
-
-    virtual PacketPtr getPacket() = 0;
-
-    virtual Tick nextPrefetchReadyTime() const = 0;
-
-    virtual void regStats();
+    void regStats();
 };
 #endif //__MEM_CACHE_PREFETCH_COMPOSITE_HH__
