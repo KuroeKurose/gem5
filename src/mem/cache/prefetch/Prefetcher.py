@@ -55,6 +55,15 @@ class BasePrefetcher(ClockedObject):
     on_data  = Param.Bool(True, "Notify prefetcher on data accesses")
     on_inst  = Param.Bool(True, "Notify prefetcher on instruction accesses")
 
+class CompositePrefetcher(BasePrefetcher):
+    type = 'CompositePrefetcher'
+    abstract = True
+    cxx_header = "mem/cache/prefetch/composite.hh"
+
+    queued = Param.BasePrefetcher(NULL,"QueuedPrefetcher attached to cache")
+    stride = Param.BasePrefetcher(NULL,"StridePrefetcher attached to cache")
+    tagged = Param.BasePrefetcher(NULL,"TaggedPrefetcher attached to cache")
+
 class QueuedPrefetcher(BasePrefetcher):
     type = "QueuedPrefetcher"
     abstract = True

@@ -112,7 +112,9 @@ def addNoISAOptions(parser):
     parser.add_option("--cacheline_size", type="int", default=64)
 
     # Cache Prefetcher
-    parser.add_option("--l2_prefetcher", type="string", default="stride")
+    parser.add_option("--l2_queued_prefetcher", type="store_true", default=False)
+    parser.add_option("--l2_stride_prefetcher", type="store_true", default=False)
+    parser.add_option("--l2_tagged_prefetcher", type="store_true", default=False)
 
     # Enable Ruby
     parser.add_option("--ruby", action="store_true")

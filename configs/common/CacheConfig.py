@@ -162,13 +162,17 @@ def config_cache(options, system):
         else:
             system.cpu[i].connectAllPorts(system.membus)
 
-    if options.l2_prefetcher == 'stride':
-        system.l2.prefetcher = StridePrefetcher()
-    elif option.l2_prefetcher == 'tagged':
-        system.l2.prefetcher = TaggedPrefetcher()
-    else:
-        print "unsupported prefetcher"
-        sys.exit(1)
+    if options.l2_queued_prefetcher or options.l2_stride_prefetcher or options.l2_tagged_prefetcher:
+        system.l2.prefetcher = CompositePrefetcher()
+
+    if options.l2_queued_prefetcher:
+        system.l2.prefetcher.queued = QueuedPrefetcher()
+
+    if options.l2_stride_prefetcher:
+        system.l2.prefetcher.stride = StridePrefetcher()
+
+    if options.l2_tagged_prefetcher:
+        system.l2.prefetcher.tagged = TaggedPrefetcher()
 
     return system
 
