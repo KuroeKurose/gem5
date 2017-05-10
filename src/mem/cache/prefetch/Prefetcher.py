@@ -96,5 +96,5 @@ class CompositePrefetcher(QueuedPrefetcher):
     cxx_class = "CompositePrefetcher"
     cxx_header = "mem/cache/prefetch/composite.hh"
 
-    stride = Param.StridePrefetcher(NULL,"StridePrefetcher attached to cache")
-    tagged = Param.TaggedPrefetcher(NULL,"TaggedPrefetcher attached to cache")
+    stride = Param.Bool(False,"Use StridePrefetcher")
+    tagged = Param.Bool(False,"Use TaggedPrefetcher")

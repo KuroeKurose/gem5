@@ -49,46 +49,77 @@
 #include "mem/cache/prefetch/composite.hh"
 
 #include "debug/HWPrefetch.hh"
+#include "params/TaggedPrefetcher.hh"
+#include "params/StridePrefetcher.hh"
 
 CompositePrefetcher::CompositePrefetcher(const CompositePrefetcherParams *p)
     : QueuedPrefetcher(p),
-      stride(p->stride),
-      tagged(p->tagged)
+      strideEnabled(p->stride),
+      taggedEnabled(p->tagged)
 {
+    StridePrefetcherParams *p1 = new StridePrefetcherParams();
+    TaggedPrefetcherParams *p2 = new TaggedPrefetcherParams();
+
+    stride = new StridePrefetcher(p1);
+    tagged = new TaggedPrefetcher(p2);
     // TODO
 }
 
 CompositePrefetcher::~CompositePrefetcher()
 {
+    delete stride;
+    delete tagged;
     // TODO
 }
 
 Tick
 CompositePrefetcher::notify(const PacketPtr &pkt)
 {
-    Tick stick = stride->notify(pkt);
-    Tick ttick = tagged->notify(pkt);
+    std::list<Tick> tickList;
+    std::list<Tick>::iterator itr;
 
-    return std::min(stick, ttick);
-    // TODO
+    if(strideEnabled)
+        tickList.push_front(stride->notify(pkt));
+    if(taggedEnabled)
+        tickList.push_front(tagged->notify(pkt));
+
+    Tick minTick = -1;
+    for(itr = tickList.begin(); itr != tickList.end(); ++itr){
+        if(minTick > *itr || minTick == -1)
+            minTick = *itr;
+    }
+
+    return minTick;
 }
 
 PacketPtr
 CompositePrefetcher::getPacket()
 {
-
-    if(stride->getPacket() !=NULL){
+    if(strideEnabled && stride->getPacket() != NULL){
         return stride->getPacket();
     }
-    else if(tagged->getPacket() != NULL){
+    else if(taggedEnabled && tagged->getPacket() != NULL){
         return tagged->getPacket();
     }
-    return NULL;
 
+    return NULL;
+}
+
+void
+CompositePrefetcher::calculatePrefetch(const PacketPtr &pkt,
+                                    std::vector<AddrPriority> &addresses)
+{
+    assert(0);
 }
 
 void
 CompositePrefetcher::regStats()
 {
     BasePrefetcher::regStats(); // TODO
+}
+
+CompositePrefetcher*
+CompositePrefetcherParams::create()
+{
+   return new CompositePrefetcher(this);
 }

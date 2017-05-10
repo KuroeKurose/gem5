@@ -66,9 +66,14 @@ class CompositePrefetcher : public QueuedPrefetcher
 
     PacketPtr getPacket();
 
+    void calculatePrefetch(const PacketPtr &pkt,
+                               std::vector<AddrPriority> &addresses);
+
     void regStats();
 
   private:
+    bool strideEnabled;
+    bool taggedEnabled;
     StridePrefetcher *stride;
     TaggedPrefetcher *tagged;
 };
