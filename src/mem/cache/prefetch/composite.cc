@@ -70,7 +70,6 @@ CompositePrefetcher::~CompositePrefetcher()
 Tick
 CompositePrefetcher::notify(const PacketPtr &pkt)
 {
-//    printf("here CompositePrefetcher::notify\n");
     std::list<Tick> tickList;
     std::list<Tick>::iterator itr;
 
@@ -91,7 +90,6 @@ CompositePrefetcher::notify(const PacketPtr &pkt)
 PacketPtr
 CompositePrefetcher::getPacket()
 {
-    printf("here CompositePrefetcher::getPacket()\n");
     if(strideEnabled && stride->getPacket() != NULL){
         return stride->getPacket();
     }
