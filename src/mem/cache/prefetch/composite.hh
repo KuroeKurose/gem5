@@ -51,11 +51,10 @@
 
 #include <list>
 
-#include "mem/cache/prefetch/queued.hh"
+#include "mem/cache/prefetch/stride.hh"
+#include "mem/cache/prefetch/tagged.hh"
 #include "params/CompositePrefetcher.hh"
 
-class StridePrefetcher;
-class TaggedPrefetcher;
 
 class CompositePrefetcher : public QueuedPrefetcher
 {

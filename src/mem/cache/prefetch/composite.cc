@@ -77,13 +77,14 @@ PacketPtr
 CompositePrefetcher::getPacket()
 {
 
-    if stride->getpkt() !=NULL{
-        return stride.getpkt();
+    if(stride->getPacket() !=NULL){
+        return stride->getPacket();
     }
-    else tagged->getpkt() != NULL
-        return tagged.getpkt();
+    else if(tagged->getPacket() != NULL){
+        return tagged->getPacket();
+    }
+    return NULL;
 
- // TODO
 }
 
 void
