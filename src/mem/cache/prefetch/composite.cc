@@ -49,29 +49,41 @@
 #include "mem/cache/prefetch/composite.hh"
 
 #include "debug/HWPrefetch.hh"
-#include "mem/cache/base.hh"
 
 CompositePrefetcher::CompositePrefetcher(const CompositePrefetcherParams *p)
-    : BasePrefetcher(p)
+    : QueuedPrefetcher(p),
+      stride(p->stride),
+      tagged(p->tagged)
 {
- // TODO
+    // TODO
 }
 
 CompositePrefetcher::~CompositePrefetcher()
 {
-// TODO
+    // TODO
 }
 
 Tick
 CompositePrefetcher::notify(const PacketPtr &pkt)
 {
-    return -1; // TODO
+    Tick stick = stride->notify(pkt);
+    Tick ttick = tagged->notify(pkt);
+
+    return std::min(stick, ttick);
+    // TODO
 }
 
 PacketPtr
 CompositePrefetcher::getPacket()
 {
-    return NULL; // TODO
+
+    if stride->getpkt() !=NULL{
+        return stride.getpkt();
+    }
+    else tagged->getpkt() != NULL
+        return tagged.getpkt();
+
+ // TODO
 }
 
 void

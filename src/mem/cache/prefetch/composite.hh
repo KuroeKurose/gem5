@@ -51,10 +51,13 @@
 
 #include <list>
 
-#include "mem/cache/prefetch/base.hh"
+#include "mem/cache/prefetch/queued.hh"
 #include "params/CompositePrefetcher.hh"
 
-class CompositePrefetcher : public BasePrefetcher
+class StridePrefetcher;
+class TaggedPrefetcher;
+
+class CompositePrefetcher : public QueuedPrefetcher
 {
   public:
     CompositePrefetcher(const CompositePrefetcherParams *p);
@@ -65,5 +68,9 @@ class CompositePrefetcher : public BasePrefetcher
     PacketPtr getPacket();
 
     void regStats();
+
+  private:
+    StridePrefetcher *stride;
+    TaggedPrefetcher *tagged;
 };
 #endif //__MEM_CACHE_PREFETCH_COMPOSITE_HH__
