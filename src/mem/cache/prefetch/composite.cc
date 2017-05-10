@@ -54,27 +54,23 @@
 
 CompositePrefetcher::CompositePrefetcher(const CompositePrefetcherParams *p)
     : QueuedPrefetcher(p),
-      strideEnabled(p->stride),
-      taggedEnabled(p->tagged)
+      strideEnabled(p->stride_enabled),
+      taggedEnabled(p->tagged_enabled),
+      stride(p->stride),
+      tagged(p->tagged)
 {
-    StridePrefetcherParams *p1 = new StridePrefetcherParams();
-    TaggedPrefetcherParams *p2 = new TaggedPrefetcherParams();
-
-    stride = new StridePrefetcher(p1);
-    tagged = new TaggedPrefetcher(p2);
-    // TODO
 }
 
 CompositePrefetcher::~CompositePrefetcher()
 {
     delete stride;
     delete tagged;
-    // TODO
 }
 
 Tick
 CompositePrefetcher::notify(const PacketPtr &pkt)
 {
+//    printf("here CompositePrefetcher::notify\n");
     std::list<Tick> tickList;
     std::list<Tick>::iterator itr;
 
@@ -95,6 +91,7 @@ CompositePrefetcher::notify(const PacketPtr &pkt)
 PacketPtr
 CompositePrefetcher::getPacket()
 {
+    printf("here CompositePrefetcher::getPacket()\n");
     if(strideEnabled && stride->getPacket() != NULL){
         return stride->getPacket();
     }

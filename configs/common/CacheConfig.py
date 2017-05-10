@@ -163,8 +163,11 @@ def config_cache(options, system):
             system.cpu[i].connectAllPorts(system.membus)
 
     system.l2.prefetcher = CompositePrefetcher()
-    system.l2.prefetcher.stride = options.l2_stride_prefetcher
-    system.l2.prefetcher.tagged = options.l2_tagged_prefetcher
+    system.l2.prefetcher.stride = StridePrefetcher()
+    system.l2.prefetcher.tagged = TaggedPrefetcher()
+
+    system.l2.prefetcher.stride_enabled = options.l2_stride_prefetcher
+    system.l2.prefetcher.tagged_enabled = options.l2_tagged_prefetcher
 
     return system
 
